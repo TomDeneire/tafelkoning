@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="nl">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Tafelkoning</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <canvas id="fx" aria-hidden="true"></canvas>
+        <button id="mute" class="icon-btn" aria-label="Geluid aan/uit">
+            🔊
+        </button>
+
+        <main id="app">
+            <!-- Start screen -->
+            <section id="screen-start" class="screen active">
+                <h1>🏆 Tafelkoning</h1>
+                <p class="sub">Los zoveel mogelijk sommen op in 60 seconden!</p>
+
+                <div class="group">
+                    <h2>Wat wil je oefenen?</h2>
+                    <div id="modes" class="modes">
+                        <button class="mode active" data-mode="mul">
+                            <span>✖️</span>Vermenigvuldigen
+                        </button>
+                        <button class="mode" data-mode="div">
+                            <span>➗</span>Delen
+                        </button>
+                        <button class="mode" data-mode="mix">
+                            <span>🎲</span>Mix
+                        </button>
+                    </div>
+                </div>
+
+                <div class="group">
+                    <h2>Welke tafels?</h2>
+                    <div id="filter" class="filter"></div>
+                </div>
+
+                <button id="start" class="big-btn">▶ Start!</button>
+
+                <div class="group">
+                    <h2>Jouw badges</h2>
+                    <div id="badges" class="badges"></div>
+                    <p id="best" class="best"></p>
+                </div>
+            </section>
+
+            <!-- Game screen -->
+            <section id="screen-game" class="screen">
+                <div class="hud">
+                    <div class="stat">
+                        <small>Juist</small><b id="score">0</b>
+                    </div>
+                    <div class="timer">
+                        <div id="time-bar"><div id="time-fill"></div></div>
+                        <b id="time">60</b>
+                    </div>
+                    <div class="stat">
+                        <small>Combo</small><b id="streak">0</b>
+                    </div>
+                </div>
+
+                <div class="question-wrap">
+                    <div id="mascot">😀</div>
+                    <div id="question" class="question">3 × 4</div>
+                    <div id="answer" class="answer">&nbsp;</div>
+                    <div id="next-badge" class="next-badge"></div>
+                </div>
+
+                <div id="numpad" class="numpad">
+                    <button data-key="1">1</button>
+                    <button data-key="2">2</button>
+                    <button data-key="3">3</button>
+                    <button data-key="4">4</button>
+                    <button data-key="5">5</button>
+                    <button data-key="6">6</button>
+                    <button data-key="7">7</button>
+                    <button data-key="8">8</button>
+                    <button data-key="9">9</button>
+                    <button data-key="back" class="fn">⌫</button>
+                    <button data-key="0">0</button>
+                    <button data-key="ok" class="fn ok">✔</button>
+                </div>
+            </section>
+
+            <!-- End screen -->
+            <section id="screen-end" class="screen">
+                <h1>⏰ Tijd is om!</h1>
+                <div class="final">
+                    <b id="final-score">0</b><span>juiste antwoorden</span>
+                </div>
+                <p id="final-record" class="best"></p>
+                <div id="final-badge" class="final-badge"></div>
+                <div class="end-btns">
+                    <button id="again" class="big-btn">🔁 Opnieuw</button>
+                    <button id="menu" class="big-btn secondary">🏠 Menu</button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Badge celebration overlay -->
+        <div id="celebrate" class="celebrate" aria-live="polite">
+            <div class="celebrate-badge"></div>
+            <div class="celebrate-name"></div>
+        </div>
+
+        <script src="app.js"></script>
+    </body>
+</html>
