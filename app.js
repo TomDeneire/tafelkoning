@@ -451,6 +451,12 @@
             state.muted = !state.muted;
             $("mute").textContent = state.muted ? "🔇" : "🔊";
         });
+
+        // Registers the offline cache; also required by most browsers
+        // before they'll offer "Add to Home Screen" / Install app.
+        if ("serviceWorker" in navigator && location.protocol !== "file:") {
+            navigator.serviceWorker.register("sw.js").catch(() => {});
+        }
     }
 
     init();
