@@ -363,15 +363,19 @@ h2 {
     font-size: 4rem;
 }
 
-/* Badge celebration */
+/* Badge celebration — a compact banner in the empty strip above the HUD
+   (next to the mute button), so it never covers the question, the answer
+   or the numpad while playing. */
 .celebrate {
     position: fixed;
-    inset: 0;
+    top: 8px;
+    left: 16px;
+    right: 64px;
     z-index: 55;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 10px;
     pointer-events: none;
     opacity: 0;
 }
@@ -379,28 +383,37 @@ h2 {
     animation: celebrate 2.4s ease-out forwards;
 }
 .celebrate-badge {
-    font-size: 10rem;
-    filter: drop-shadow(0 0 30px var(--accent));
+    font-size: 2.6rem;
+    filter: drop-shadow(0 0 12px var(--accent));
 }
 .celebrate-name {
-    font-size: 2rem;
+    font-size: 1.05rem;
     font-weight: bold;
     background: rgba(0, 0, 0, 0.55);
-    padding: 8px 22px;
+    padding: 6px 16px;
     border-radius: 999px;
     text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
+/* Same reasoning as .celebrate above: a small banner in the top strip
+   instead of an overlay on the play area. */
 .toast {
     position: fixed;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 8px;
+    left: 16px;
+    right: 64px;
     z-index: 54;
-    font-size: 2.2rem;
+    display: flex;
+    justify-content: center;
+    font-size: 1.15rem;
     font-weight: bold;
     color: var(--accent);
-    text-shadow: 0 3px 0 rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.45);
+    border-radius: 999px;
+    padding: 6px 16px;
     pointer-events: none;
     animation: toast 1s ease-out forwards;
 }
@@ -450,11 +463,11 @@ h2 {
 @keyframes celebrate {
     0% {
         opacity: 0;
-        transform: scale(0.1) rotate(-30deg);
+        transform: scale(0.3) rotate(-15deg);
     }
     20% {
         opacity: 1;
-        transform: scale(1.2) rotate(6deg);
+        transform: scale(1.15) rotate(4deg);
     }
     35% {
         transform: scale(1) rotate(0);
@@ -465,21 +478,21 @@ h2 {
     }
     100% {
         opacity: 0;
-        transform: scale(1.4);
+        transform: scale(1.05);
     }
 }
 @keyframes toast {
     0% {
         opacity: 0;
-        transform: translate(-50%, 0) scale(0.5);
+        transform: translateY(-10px) scale(0.85);
     }
     20% {
         opacity: 1;
-        transform: translate(-50%, -50%) scale(1.1);
+        transform: translateY(0) scale(1.05);
     }
     100% {
         opacity: 0;
-        transform: translate(-50%, -120px) scale(1);
+        transform: translateY(-4px) scale(1);
     }
 }
 
