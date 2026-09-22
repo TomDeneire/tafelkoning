@@ -11,7 +11,7 @@
         { at: 25, icon: "🚀", name: "Raket-Brein" },
         { at: 30, icon: "👑", name: "Tafelkoning" },
     ];
-    const STORAGE_KEY = "tafels-v1";
+    const STORAGE_KEY = "tafels-v2";
 
     const $ = (id) => document.getElementById(id);
 
@@ -26,7 +26,8 @@
         timerId: 0,
         running: false,
         muted: false,
-        saved: { badges: {}, best: {} },
+        comboKey: "",
+        saved: { combos: {} },
     };
 
     // ---------- Persistence ----------
@@ -46,6 +47,16 @@
         } catch (e) {
             /* storage unavailable */
         }
+    }
+
+    // Badges and best score are tracked per combination of mode + chosen
+    // numbers, so switching the filter shows a fresh set of goals.
+    function comboKey(mode, numbers) {
+        return `${mode}:${[...numbers].sort((a, b) => a - b).join(",")}`;
+    }
+
+    function getCombo(key) {
+        return state.saved.combos[key] || { badges: {}, best: 0 };
     }
 
     // ---------- Screens ----------
@@ -70,20 +81,21 @@
                 else state.numbers.add(n);
                 b.classList.toggle("on", state.numbers.has(n));
                 $("start").disabled = state.numbers.size === 0;
+                renderBadges();
             });
             box.appendChild(b);
         }
     }
 
     function renderBadges() {
+        const combo = getCombo(comboKey(state.mode, state.numbers));
         $("badges").innerHTML = BADGES.map((b) => {
-            const got = state.saved.badges[b.at];
+            const got = combo.badges[b.at];
             return `<div class="badge${got ? " got" : ""}"><span class="ico">${b.icon}</span>${b.name}<br>(${b.at})</div>`;
         }).join("");
-        const best = state.saved.best[state.mode];
-        $("best").textContent = best
-            ? `Beste score (${modeLabel(state.mode)}): ${best}`
-            : "";
+        $("best").textContent = combo.best
+            ? `Beste score (${modeLabel(state.mode)}, deze cijfers): ${combo.best}`
+            : "Nog geen score met deze combinatie";
     }
 
     function modeLabel(mode) {
@@ -150,6 +162,7 @@
         state.streak = 0;
         state.running = true;
         state.question = null;
+        state.comboKey = comboKey(state.mode, state.numbers);
         $("score").textContent = "0";
         $("streak").textContent = "0";
         setMascot("😀");
@@ -181,16 +194,17 @@
     function endRound() {
         clearInterval(state.timerId);
         state.running = false;
-        const prevBest = state.saved.best[state.mode] || 0;
-        const record = state.score > prevBest;
-        if (record) state.saved.best[state.mode] = state.score;
+        const combo = getCombo(state.comboKey);
+        const record = state.score > combo.best;
+        if (record) combo.best = state.score;
+        state.saved.combos[state.comboKey] = combo;
         save();
 
         $("final-score").textContent = state.score;
         $("final-record").textContent =
             record && state.score > 0
-                ? "🎉 Nieuw persoonlijk record!"
-                : `Beste score: ${state.saved.best[state.mode] || 0}`;
+                ? "🎉 Nieuw persoonlijk record voor deze combinatie!"
+                : `Beste score voor deze combinatie: ${combo.best}`;
         const got = BADGES.filter((b) => b.at <= state.score).pop();
         $("final-badge").innerHTML = got
             ? `<span class="ico">${got.icon}</span>${got.name}`
@@ -280,7 +294,9 @@
     }
 
     function awardBadge(badge) {
-        state.saved.badges[badge.at] = true;
+        const combo = getCombo(state.comboKey);
+        combo.badges[badge.at] = true;
+        state.saved.combos[state.comboKey] = combo;
         save();
         setMascot("😎");
 
