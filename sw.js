@@ -1,6 +1,6 @@
 // Minimal offline cache so the game keeps working once installed and lets
 // browsers recognize it as an installable PWA.
-const CACHE = "tafelkoning-v1";
+const CACHE = "tafelkoning-v2";
 const ASSETS = [
     "./",
     "./index.html",

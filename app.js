@@ -112,18 +112,16 @@
         const nums = [...state.numbers];
         let q;
         do {
-            const a = pick(nums);
-            const b = pick(nums);
+            // Selected numbers are the tables; the multiplier runs 1..10.
+            const t = pick(nums);
+            const m = 1 + Math.floor(Math.random() * 10);
             const op = state.mode === "mix" ? pick(["mul", "div"]) : state.mode;
+            const [a, b] = Math.random() < 0.5 ? [m, t] : [t, m];
             q =
                 op === "mul"
-                    ? { text: `${a} × ${b}`, answer: a * b }
-                    : { text: `${a * b} : ${a}`, answer: b };
-        } while (
-            state.question &&
-            q.text === state.question.text &&
-            (nums.length > 1 || state.mode === "mix")
-        );
+                    ? { text: `${a} × ${b}`, answer: t * m }
+                    : { text: `${t * m} : ${t}`, answer: m };
+        } while (state.question && q.text === state.question.text);
         state.question = q;
         state.input = "";
         $("question").textContent = q.text;
